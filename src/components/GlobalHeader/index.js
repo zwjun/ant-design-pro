@@ -9,6 +9,9 @@ import HeaderSearch from '../HeaderSearch';
 import styles from './index.less';
 
 export default class GlobalHeader extends PureComponent {
+  state = {
+    visible: false,
+  };
   componentWillUnmount() {
     this.triggerResizeEvent.cancel();
   }
@@ -48,6 +51,9 @@ export default class GlobalHeader extends PureComponent {
     onCollapse(!collapsed);
     this.triggerResizeEvent();
   };
+  isDropdownVisible = visible => {
+    this.setState({ visible })
+  }
   /* eslint-disable*/
   @Debounce(600)
   triggerResizeEvent() {
@@ -65,6 +71,7 @@ export default class GlobalHeader extends PureComponent {
       onNoticeVisibleChange,
       onMenuClick,
       onNoticeClear,
+      title,
     } = this.props;
     const menu = (
       <Menu className={styles.menu} selectedKeys={[]} onClick={onMenuClick}>
@@ -86,17 +93,26 @@ export default class GlobalHeader extends PureComponent {
     const noticeData = this.getNoticeData();
     return (
       <div className={styles.header}>
-        {isMobile && [
-          <Link to="/" className={styles.logo} key="logo">
-            <img src={logo} alt="logo" width="32" />
-          </Link>,
-          <Divider type="vertical" key="line" />,
-        ]}
         <Icon
           className={styles.trigger}
           type={collapsed ? 'menu-unfold' : 'menu-fold'}
           onClick={this.toggle}
         />
+        {isMobile ? (
+          [
+            <Divider type="vertical" key="line" style={{ marginLeft: 0 }} />,
+            <Link to="/" className={styles.logoWithMobile} key="logo">
+              <img src={logo} alt="logo" width="32" />
+            </Link>,
+          ]
+        ) : (
+          <div className={styles.logo} key="logo">
+            <Link to="/">
+              <img src={logo} alt="logo" />
+              <h1>{title}</h1>
+            </Link>
+          </div>
+        )}
         <div className={styles.right}>
           <HeaderSearch
             className={`${styles.action} ${styles.search}`}
@@ -150,8 +166,14 @@ export default class GlobalHeader extends PureComponent {
             />
           </NoticeIcon>
           {currentUser.name ? (
-            <Dropdown overlay={menu}>
-              <span className={`${styles.action} ${styles.account}`}>
+            <Dropdown
+              overlay={menu}
+              onVisibleChange={this.isDropdownVisible}
+            >
+              <span
+                className={`${styles.action} ${styles.account}`}
+                style={{ background: this.state.visible && '#367fa9' }}
+          >
                 <Avatar size="small" className={styles.avatar} src={currentUser.avatar} />
                 <span className={styles.name}>{currentUser.name}</span>
               </span>

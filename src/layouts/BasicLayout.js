@@ -1,6 +1,6 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
-import { Layout, Icon, message } from 'antd';
+import { Layout, message } from 'antd';
 import DocumentTitle from 'react-document-title';
 import { connect } from 'dva';
 import { Route, Redirect, Switch, routerRedux } from 'dva/router';
@@ -8,15 +8,15 @@ import { ContainerQuery } from 'react-container-query';
 import classNames from 'classnames';
 import { enquireScreen } from 'enquire-js';
 import GlobalHeader from '../components/GlobalHeader';
-import GlobalFooter from '../components/GlobalFooter';
 import SiderMenu from '../components/SiderMenu';
 import NotFound from '../routes/Exception/404';
 import { getRoutes } from '../utils/utils';
 import Authorized from '../utils/Authorized';
 import { getMenuData } from '../common/menu';
-import logo from '../assets/logo.svg';
+import * as config from '../utils/config';
+import styles from './BasicLayout.less';
 
-const { Content, Header, Footer } = Layout;
+const { Content, Header } = Layout;
 const { AuthorizedRoute, check } = Authorized;
 
 /**
@@ -179,36 +179,39 @@ class BasicLayout extends React.PureComponent {
       location,
     } = this.props;
     const bashRedirect = this.getBashRedirect();
+    const contentStyle = classNames(styles.content, {
+      [`${styles.contentIsMobile}`]: this.state.isMobile,
+    });
     const layout = (
-      <Layout>
-        <SiderMenu
-          logo={logo}
-          // 不带Authorized参数的情况下如果没有权限,会强制跳到403界面
-          // If you do not have the Authorized parameter
-          // you will be forced to jump to the 403 interface without permission
-          Authorized={Authorized}
-          menuData={getMenuData()}
-          collapsed={collapsed}
-          location={location}
-          isMobile={this.state.isMobile}
-          onCollapse={this.handleMenuCollapse}
-        />
-        <Layout>
-          <Header style={{ padding: 0 }}>
-            <GlobalHeader
-              logo={logo}
-              currentUser={currentUser}
-              fetchingNotices={fetchingNotices}
-              notices={notices}
-              collapsed={collapsed}
-              isMobile={this.state.isMobile}
-              onNoticeClear={this.handleNoticeClear}
-              onCollapse={this.handleMenuCollapse}
-              onMenuClick={this.handleMenuClick}
-              onNoticeVisibleChange={this.handleNoticeVisibleChange}
-            />
-          </Header>
-          <Content style={{ margin: '24px 24px 0', height: '100%' }}>
+      <div className={styles.container}>
+        <Header style={{ padding: 0 }}>
+          <GlobalHeader
+            logo={config.logo}
+            title={config.projectName}
+            currentUser={currentUser}
+            fetchingNotices={fetchingNotices}
+            notices={notices}
+            collapsed={collapsed}
+            isMobile={this.state.isMobile}
+            onNoticeClear={this.handleNoticeClear}
+            onCollapse={this.handleMenuCollapse}
+            onMenuClick={this.handleMenuClick}
+            onNoticeVisibleChange={this.handleNoticeVisibleChange}
+          />
+        </Header>
+        <div className={styles.main}>
+          <SiderMenu
+            // 不带Authorized参数的情况下如果没有权限,会强制跳到403界面
+            // If you do not have the Authorized parameter
+            // you will be forced to jump to the 403 interface without permission
+            Authorized={Authorized}
+            menuData={getMenuData()}
+            collapsed={collapsed}
+            location={location}
+            isMobile={this.state.isMobile}
+            onCollapse={this.handleMenuCollapse}
+          />
+          <Content className={contentStyle}>
             <Switch>
               {redirectData.map(item => (
                 <Redirect key={item.from} exact from={item.from} to={item.to} />
@@ -227,43 +230,14 @@ class BasicLayout extends React.PureComponent {
               <Route render={NotFound} />
             </Switch>
           </Content>
-          <Footer style={{ padding: 0 }}>
-            <GlobalFooter
-              links={[
-                {
-                  key: 'Pro 首页',
-                  title: 'Pro 首页',
-                  href: 'http://pro.ant.design',
-                  blankTarget: true,
-                },
-                {
-                  key: 'github',
-                  title: <Icon type="github" />,
-                  href: 'https://github.com/ant-design/ant-design-pro',
-                  blankTarget: true,
-                },
-                {
-                  key: 'Ant Design',
-                  title: 'Ant Design',
-                  href: 'http://ant.design',
-                  blankTarget: true,
-                },
-              ]}
-              copyright={
-                <Fragment>
-                  Copyright <Icon type="copyright" /> 2018 蚂蚁金服体验技术部出品
-                </Fragment>
-              }
-            />
-          </Footer>
-        </Layout>
-      </Layout>
+        </div>
+      </div>
     );
 
     return (
       <DocumentTitle title={this.getPageTitle()}>
         <ContainerQuery query={query}>
-          {params => <div className={classNames(params)}>{layout}</div>}
+          {params => <div className={classNames(styles.wrap, params)}>{layout}</div>}
         </ContainerQuery>
       </DocumentTitle>
     );
