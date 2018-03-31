@@ -2,6 +2,11 @@ import { isUrl } from '../utils/utils';
 
 const menuData = [
   {
+    name: '首页',
+    icon: 'home',
+    path: 'workplace',
+  },
+  {
     name: 'dashboard',
     icon: 'dashboard',
     path: 'dashboard',
@@ -13,10 +18,6 @@ const menuData = [
       {
         name: '监控页',
         path: 'monitor',
-      },
-      {
-        name: '工作台',
-        path: 'workplace',
         // hideInBreadcrumb: true,
         // hideInMenu: true,
       },
@@ -153,6 +154,12 @@ const menuData = [
         path: 'register-result',
       },
     ],
+  },
+  {
+    name: '第三方链接跳转',
+    icon: 'link',
+    path: 'https://www.baidu.com/',
+    target: '_blank',
   },
 ];
 

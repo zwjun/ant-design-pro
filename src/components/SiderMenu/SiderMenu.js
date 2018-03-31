@@ -75,7 +75,7 @@ export default class SiderMenu extends PureComponent {
   /**
    * 判断是否是http链接.返回 Link 或 a
    * Judge whether it is http link.return a or Link
-   * @memberof SiderMenu
+   * @memberof SiderMenu <Icon type="minus" />
    */
   getMenuItemPath = item => {
     const itemPath = this.conversionPath(item.path);
@@ -209,7 +209,8 @@ export default class SiderMenu extends PureComponent {
         collapsed={collapsed}
         breakpoint="lg"
         onCollapse={onCollapse}
-        width={256}
+        width={250}
+        collapsedWidth={64}
         className={styles.sider}
       >
         <Menu
