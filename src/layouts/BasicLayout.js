@@ -6,7 +6,7 @@ import { connect } from 'dva';
 import { Route, Redirect, Switch, routerRedux } from 'dva/router';
 import { ContainerQuery } from 'react-container-query';
 import classNames from 'classnames';
-import { enquireScreen } from 'enquire-js';
+import { enquireScreen, unenquireScreen } from 'enquire-js';
 import GlobalHeader from '../components/GlobalHeader';
 import SiderMenu from '../components/SiderMenu';
 import NotFound from '../routes/Exception/404';
@@ -98,8 +98,11 @@ class BasicLayout extends React.PureComponent {
       breadcrumbNameMap: getBreadcrumbNameMap(getMenuData(), routerData),
     };
   }
+  componentWillMount() {
+    unenquireScreen(this.enquireHandler);
+  }
   componentDidMount() {
-    enquireScreen(mobile => {
+    this.enquireHandler = enquireScreen(mobile => {
       this.setState({
         isMobile: mobile,
       });
