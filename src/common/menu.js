@@ -12,6 +12,10 @@ const menuData = [
     path: 'dashboard',
     children: [
       {
+        name: '404',
+        path: 'error',
+      },
+      {
         name: '分析页',
         path: 'analysis',
       },

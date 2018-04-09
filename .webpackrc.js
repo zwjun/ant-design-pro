@@ -19,7 +19,8 @@ export default {
   html: {
     template: './src/index.ejs',
   },
-  disableDynamicImport: true,
+  // 按需加载
+  // disableDynamicImport: true,
   publicPath: '/',
   hash: true,
 };

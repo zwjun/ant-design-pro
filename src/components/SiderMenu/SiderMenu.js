@@ -4,6 +4,8 @@ import pathToRegexp from 'path-to-regexp';
 import { Link } from 'dva/router';
 import styles from './index.less';
 import { urlToList } from '../_utils/pathTools';
+import circle from '../../assets/circle.svg';
+
 
 const { Sider } = Layout;
 const { SubMenu } = Menu;
@@ -19,7 +21,8 @@ const getIcon = icon => {
   if (typeof icon === 'string') {
     return <Icon type={icon} />;
   }
-  return icon;
+  // return icon;
+  return <img src={circle} alt="icon" className={`${styles.icon} sider-menu-item-img`} />;
 };
 
 export const getMeunMatcheys = (flatMenuKeys, path) => {
